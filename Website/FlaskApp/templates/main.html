@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<TITLE>
+Cricket Tournament
+</TITLE>
+<SCRIPT> 
+	var d = {{ d|safe }}
+</SCRIPT>
+<STYLE>
+	.centered {
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	}
+</STYLE>
+</HEAD>
+<BODY>
+
+<!-- IMAGE AND TEXT-->
+
+<div class="container">
+	<center ><img src="https://icc-static-files.s3.amazonaws.com/ICC/photo/2017/01/30/44780aa2-2b6d-4048-897c-6606762b3d38/GettyImages-463485384_Cropped.jpg" alt="" width = "80%"></center>
+	<div class="centered"><font color = "white"><h1 class="display-3">Cricket World</h1></font><p class="lead"><font color = "white">Love cricket but don't have time to watch the match? We've got you covered! Check out the team standings, player details, teams and much more!</font></p></div>
+</div>
+
+<!--POINTS TABLE-->
+<SCRIPT>
+var mytable = "<table cellpadding=\"0\" cellspacing=\"0\"><tbody><tr>";
+
+for (var i = 0; i < len(d['Points']); i++) {
+	    for(var j = 0; j < len(d['Points'][0]); j++){
+	    		mytable += "<td>" + d['Points'][j] + "</td>"
+	    }
+	    
+	    mytable += "</tr>"
+}
+
+mytable += "</tbody></table>";
+
+document.write(mytable);
+
+</SCRIPT>
+
+</BODY>
+</HTML>

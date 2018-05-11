@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--<script> var d = {{ d|safe }}
+</script>
+-->
+
+    <title>Cricket Tournament</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/heroic-features.css" rel="stylesheet">
+    <style>
+    .vertical-menu {
+    width: 200px; /* Set a width if you like */
+    height: 150px;
+    overflow-y: auto;
+}
+
+	.vertical-menu a {
+	    background-color: #eee; /* Grey background color */
+	    color: black; /* Black text color */
+	    display: block; /* Make the links appear below each other */
+	    padding: 12px; /* Add some padding */
+	    text-decoration: none; /* Remove underline from links */
+	}
+
+	.vertical-menu a:hover {
+	    background-color: #ccc; /* Dark grey background on mouse-over */
+	}
+
+	.vertical-menu a.active {
+	    background-color: #000; /* Add a black color to the "active/current" link */
+	    color: white;
+	}
+	</style>
+	<style>
+	.container {
+	    position: relative;
+	    text-align: center;
+	    color: white;
+	}
+
+	.bottom-left {
+	    position: absolute;
+	    bottom: 8px;
+	    left: 16px;
+	}
+
+	.top-left {
+	    position: absolute;
+	    top: 8px;
+	    left: 16px;
+	}
+
+	.top-right {
+	    position: absolute;
+	    top: 8px;
+	    right: 16px;
+	}
+
+	.bottom-right {
+	    position: absolute;
+	    bottom: 8px;
+	    right: 16px;
+	}
+
+	.centered {
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	}
+	</style>
+	<script>
+	$(document).ready(function(){
+	    $('[data-toggle="popover"]').popover();   
+	});
+	</script>
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Manager Portal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a> <!-- CHANGE THESE LATER -->
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <!-- Jumbotron Header -->
+      <header class="jumbotron my-4">
+             
+
+         <div class="container">
+         	  <img src="https://icc-static-files.s3.amazonaws.com/ICC/photo/2017/01/30/44780aa2-2b6d-4048-897c-6606762b3d38/GettyImages-463485384_Cropped.jpg" alt="" width = "80%">
+	  <div class="centered"><h1 class="display-3">Cricket World</h1><p class="lead">Love cricket but don't have time to watch the match? We've got you covered! Check out the team standings, player details, teams and much more!</p></div>
+	
+	</div>
+        
+
+      <!--  <a href="#" class="btn btn-primary btn-lg">Call to action!</a> -->
+      </header>
+
+      <!-- Page Features -->
+<div class="row text-center">
+
+        <div class="card mb-4">
+          <div class="card">
+            <!--<img class="card-img-top" src="http://placehold.it/500x325" alt="">-->
+            <div class="card-body">
+              <font color = "black"><h4 class="card-title">Points Table</h4></font>
+              <p class="card-text"></p>
+            </div>
+			<div class="container">
+			<font color = "black">
+			  <h2>Bordered Table</h2>
+			  <p>The .table-bordered class adds borders to a table:</p>            
+			  <table class="table table-bordered">
+				<thead>
+				  <tr>
+					<th><a href = "trial.html">Firstname</a></th>
+					<th>Lastname</th>
+					<th>Email</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>helo</td>
+					<td>Doe</td>
+					<td>john@example.com</td>
+				  </tr>
+				  <tr>
+					<td>Mary</td>
+					<td>Moe</td>
+					<td>mary@example.com</td>
+				  </tr>
+				  <tr>
+					<td>July</td>
+					<td>Dooley</td>
+					<td>july@example.com</td>
+				  </tr>
+				</tbody>
+			  </table>
+			  </font>
+			</div>
+            <!--<div class="card-footer">
+             <a href="#" class="btn btn-primary">Find Out More!</a> 
+            </div>-->
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card">
+          
+            <div class="card-body">
+              <font color = "black"><h4 class="card-title">Completed Matches</h4></font>
+               <div class="vertical-menu">
+			<a class="active" data-toggle="popover" data-content="Some content">Match 0</a>
+			<a href="test.html">mATCH 1</a>
+			<a href="#">Match 2</a>
+			<a href="#">Match 3</a>
+			<a href="#">Match 4</a>
+			<a href="#">Match 5</a>
+			<a href="#">Match 6</a>
+		</div> 
+            </div>
+          </div>
+        </div>
+<br>
+        <div class="card mb-4">
+          <div class="card">
+
+            <div class="card-body">
+             <font color = "black"><h4 class="card-title">Upcoming Matches</h4></font>
+               <div class="vertical-menu">
+			<a href="#" class="active">Match 0</a>
+			<a href="#">Match 1</a>
+			<a href="#">Match 2</a>
+			<a href="#">Match 3</a>
+			<a href="#">Match 4</a>
+			<a href="#">Match 5</a>
+			<a href="#">Match 6</a>
+		</div> 
+            </div>
+          </div>
+          </div>
+
+<br>
+<div data-role="page" data-dialog="true" id="bat">
+  <div data-role="header">
+    <h1>BEST BATSMAN</h1>
+  </div>
+
+  <div data-role="main" class="ui-content " style="color : white"> 
+    <p>{{ d['BestBatFull'] }} </p>
+
+  </div>
+</div> 
+        <div class="card mb-4">
+          <div class="card">
+
+            <div class="card-body" data-role="main">
+              <div  class="ui-content">
+             <font color = "black"><h4 class="card-title">Best Batsman</h4></font>
+               <a href = "{{url_for('batsman')}}" class="active"><font color = "black">{{ d['BestBat'].FirstName }} {{ d['BestBat'].TotalRuns }}</font></a>
+            </div>
+            </div>
+          </div>
+        </div>
+        <form action="/batsman"  method="post">
+<button type="submit" >Batsman</button>
+</form>
+<!--<script>
+//function myfunc( )
+//{
+//	var d = {{d|safe}}
+ //	alert({{ d['BestBatFull'] }}.FirstName + "");
+//}
+
+</script> -->
+
+      <div data-role="page" data-dialog="true" id="bowl">
+  <div data-role="header">
+    <h1>BEST BOWLER</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <p>{{ d['BestBowlFull'] }} </p>
+
+  </div>
+</div> 
+        <div class="card mb-4">
+          <div class="card">
+
+            <div class="card-body" data-role="main">
+            <div  class="ui-content">
+             <font color = "black"><h4 class="card-title">Best Bowler</h4></font>
+               <a class="active" href = "#bowl" ><font color = "black">{{ d['BestBowl'].FirstName }} {{ d['BestBowl'].Wickets }}</font></a>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  </body>
+
+</html>
