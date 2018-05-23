@@ -1,0 +1,544 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.12
+-- Dumped by pg_dump version 9.5.12
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: batting_insert(integer, double precision, integer); Type: FUNCTION; Schema: public; Owner: shk4869
+--
+
+CREATE FUNCTION public.batting_insert(id integer, strike double precision, runs_scored integer) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+UPDATE "Batting" SET "TotalRuns" = "TotalRuns" + runs_scored,"StrikeRate" = strike, "Matches" = "Matches" +1   WHERE "PlayerID" = id;
+IF (SELECT "Batting"."HighScore" FROM "Batting" WHERE "PlayerID" = id) < runs_scored THEN
+	UPDATE "Batting" SET "HighScore" = runs_scored WHERE "PlayerID" = id;
+END IF;
+RETURN 1;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.batting_insert(id integer, strike double precision, runs_scored integer) OWNER TO shk4869;
+
+--
+-- Name: batting_insert(integer, integer, integer); Type: FUNCTION; Schema: public; Owner: shk4869
+--
+
+CREATE FUNCTION public.batting_insert(id integer, strike integer, runs_scored integer) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+UPDATE "Batting" SET "TotalRuns" = "TotalRuns" + runs_scored,"StrikeRate" = strike, "Matches" = "Matches" +1  WHERE "PlayerID" = id;
+IF "HighScore" < runs_scored AND "PlayerID" = id THEN
+	UPDATE "Batting" SET "HighScore" = runs_scored WHERE "PlayerID" = id;
+END IF;
+RETURN 1;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.batting_insert(id integer, strike integer, runs_scored integer) OWNER TO shk4869;
+
+--
+-- Name: bowling_insert(integer, double precision, integer); Type: FUNCTION; Schema: public; Owner: shk4869
+--
+
+CREATE FUNCTION public.bowling_insert(id integer, eco double precision, wickets integer) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+UPDATE "Bowler" SET "Wickets" = "Wickets" + wickets,"Economy" = eco, "Matches" = "Matches" +1   WHERE "PlayerID" = id;
+RETURN 1;
+
+END;
+$$;
+
+
+ALTER FUNCTION public.bowling_insert(id integer, eco double precision, wickets integer) OWNER TO shk4869;
+
+--
+-- Name: no_of_matches(); Type: FUNCTION; Schema: public; Owner: shk4869
+--
+
+CREATE FUNCTION public.no_of_matches() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ 
+BEGIN 
+UPDATE "Team" SET "GamesPlayed"= "GamesPlayed" +1 WHERE "TeamName" = NEW."TeamA" OR "TeamName" = NEW."TeamB" ;
+RETURN NEW; 
+END; 
+$$;
+
+
+ALTER FUNCTION public.no_of_matches() OWNER TO shk4869;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: Batting; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Batting" (
+    "PlayerID" integer NOT NULL,
+    "StrikeRate" double precision DEFAULT 0.0,
+    "Matches" integer DEFAULT 0,
+    "TotalRuns" integer DEFAULT 0,
+    "HighScore" integer DEFAULT 0
+);
+
+
+ALTER TABLE public."Batting" OWNER TO postgres;
+
+--
+-- Name: Bowler; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Bowler" (
+    "PlayerID" integer NOT NULL,
+    "Economy" double precision DEFAULT 0.0,
+    "Wickets" integer DEFAULT 0,
+    "Matches" integer DEFAULT 0,
+    "BBI" character varying(10) NOT NULL
+);
+
+
+ALTER TABLE public."Bowler" OWNER TO postgres;
+
+--
+-- Name: Match; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Match" (
+    "MatchID" integer NOT NULL,
+    "TeamA" character varying(15) NOT NULL,
+    "TeamB" character varying(15) NOT NULL,
+    "Date" date DEFAULT ('now'::text)::date,
+    "Toss" character varying(15),
+    "Winner" character varying(15)
+);
+
+
+ALTER TABLE public."Match" OWNER TO postgres;
+
+--
+-- Name: Team; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Team" (
+    "TeamID" integer NOT NULL,
+    "TeamName" character varying(20) NOT NULL,
+    "Coach" character varying(15),
+    "Captain" character varying(15) NOT NULL,
+    "GamesPlayed" integer DEFAULT 0
+);
+
+
+ALTER TABLE public."Team" OWNER TO postgres;
+
+--
+-- Name: WinTemp; Type: VIEW; Schema: public; Owner: shk4869
+--
+
+CREATE VIEW public."WinTemp" AS
+ SELECT "Match"."Winner",
+    count("Match"."Winner") AS count
+   FROM public."Match"
+  WHERE ("Match"."Winner" IS NOT NULL)
+  GROUP BY "Match"."Winner"
+UNION
+ SELECT "Match"."TeamA" AS "Winner",
+    0 AS count
+   FROM public."Match"
+  WHERE (NOT (("Match"."TeamA")::text IN ( SELECT "Match_1"."Winner"
+           FROM public."Match" "Match_1")))
+UNION
+ SELECT "Match"."TeamB" AS "Winner",
+    0 AS count
+   FROM public."Match"
+  WHERE (NOT (("Match"."TeamB")::text IN ( SELECT "Match_1"."Winner"
+           FROM public."Match" "Match_1")));
+
+
+ALTER TABLE public."WinTemp" OWNER TO shk4869;
+
+--
+-- Name: WINREC; Type: VIEW; Schema: public; Owner: shk4869
+--
+
+CREATE VIEW public."WINREC" AS
+ SELECT "WinTemp"."Winner",
+    "WinTemp".count
+   FROM public."WinTemp"
+UNION
+ SELECT "Team"."TeamName" AS "Winner",
+    0 AS count
+   FROM public."Team"
+  WHERE (NOT (("Team"."TeamName")::text IN ( SELECT "WinTemp"."Winner"
+           FROM public."WinTemp")));
+
+
+ALTER TABLE public."WINREC" OWNER TO shk4869;
+
+--
+-- Name: LOSSES; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."LOSSES" AS
+ SELECT "Team"."TeamName",
+    ("Team"."GamesPlayed" - "WINREC".count) AS "Lost"
+   FROM (public."WINREC"
+     CROSS JOIN public."Team")
+  WHERE (("WINREC"."Winner")::text = ("Team"."TeamName")::text);
+
+
+ALTER TABLE public."LOSSES" OWNER TO postgres;
+
+--
+-- Name: LogIn; Type: TABLE; Schema: public; Owner: shk4869
+--
+
+CREATE TABLE public."LogIn" (
+    "Password" character varying NOT NULL,
+    "UserName" character varying(15) NOT NULL
+);
+
+
+ALTER TABLE public."LogIn" OWNER TO shk4869;
+
+--
+-- Name: Player; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Player" (
+    "TeamID" integer NOT NULL,
+    "FirstName" character varying(15) NOT NULL,
+    "LastName" character varying(15),
+    "Age" integer DEFAULT 25,
+    "Role" character varying(15) NOT NULL,
+    "PlayerId" integer NOT NULL,
+    "DoB" character varying(15) DEFAULT ((1 / 1) / 2001)
+);
+
+
+ALTER TABLE public."Player" OWNER TO postgres;
+
+--
+-- Name: Points; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Points" (
+    "TeamID" integer NOT NULL,
+    "Matches" integer DEFAULT 0,
+    "Win" integer DEFAULT 0,
+    "Lost" integer DEFAULT 0,
+    "Draw" integer DEFAULT 0,
+    "Points" integer DEFAULT 0
+);
+
+
+ALTER TABLE public."Points" OWNER TO postgres;
+
+--
+-- Name: PointsTable; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."PointsTable" AS
+ SELECT "LOSSES"."TeamName",
+    ("WINREC".count + "LOSSES"."Lost") AS "MatchesPlayed",
+    "WINREC".count AS "Wins",
+    "LOSSES"."Lost",
+    ("WINREC".count * 2) AS "Points"
+   FROM (public."WINREC"
+     CROSS JOIN public."LOSSES")
+  WHERE (("WINREC"."Winner")::text = ("LOSSES"."TeamName")::text)
+  ORDER BY ("WINREC".count * 2) DESC;
+
+
+ALTER TABLE public."PointsTable" OWNER TO postgres;
+
+--
+-- Name: WINS; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."WINS" AS
+ SELECT "Match"."Winner",
+    count("Match"."Winner") AS count
+   FROM public."Match"
+  WHERE ("Match"."Winner" IS NOT NULL)
+  GROUP BY "Match"."Winner"
+UNION
+ SELECT "Match"."TeamA" AS "Winner",
+    0 AS count
+   FROM public."Match"
+  WHERE (NOT (("Match"."TeamA")::text IN ( SELECT "Match_1"."Winner"
+           FROM public."Match" "Match_1")))
+UNION
+ SELECT "Match"."TeamB" AS "Winner",
+    0 AS count
+   FROM public."Match"
+  WHERE (NOT (("Match"."TeamB")::text IN ( SELECT "Match_1"."Winner"
+           FROM public."Match" "Match_1")));
+
+
+ALTER TABLE public."WINS" OWNER TO postgres;
+
+--
+-- Data for Name: Batting; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Batting" ("PlayerID", "StrikeRate", "Matches", "TotalRuns", "HighScore") FROM stdin;
+2	180.75	5	220	65
+4	165.22999999999999	6	265	45
+6	233.300000000000011	5	227	100
+1	333.300000000000011	13	1386	200
+\.
+
+
+--
+-- Data for Name: Bowler; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Bowler" ("PlayerID", "Economy", "Wickets", "Matches", "BBI") FROM stdin;
+5	21	11	4	35/4
+8	5.5	34	8	8.9/4
+7	6.70000000000000018	23	9	9/2
+3	4.70000000000000018	43	8	25/5
+\.
+
+
+--
+-- Data for Name: LogIn; Type: TABLE DATA; Schema: public; Owner: shk4869
+--
+
+COPY public."LogIn" ("Password", "UserName") FROM stdin;
+password	user
+\.
+
+
+--
+-- Data for Name: Match; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Match" ("MatchID", "TeamA", "TeamB", "Date", "Toss", "Winner") FROM stdin;
+1	India	Australia	2017-11-01	India	Australia
+3	India	South Africa	2018-04-01	India	India
+2	South Africa	West Indies	2018-03-11	South Africa	West Indies
+4	Australia	India	2018-04-03	Australia	Australia
+5	West Indies	India	2018-04-05	India	India
+6	South Africa	Australia	2018-04-06	Australia	Australia
+7	India	South Africa	2018-04-07	India	India
+8	West Indies	Australia	2018-05-28	\N	\N
+9	Australia	South Africa	2018-05-29	\N	\N
+10	India	South Africa	2018-05-30	\N	\N
+11	India	Australia	2018-05-30	India	India
+\.
+
+
+--
+-- Data for Name: Player; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Player" ("TeamID", "FirstName", "LastName", "Age", "Role", "PlayerId", "DoB") FROM stdin;
+100	Virat	Kohli	28	Batsman	1	5/11/1989
+100	Rohit	Sharma	27	Batsman	2	10/1/1990
+101	Steve	Smith	26	Batsman	4	8/7/1991
+100	Bhuvaneshwar	Kumar	24	Bowler	3	30/3/1992
+101	Chris	Lyon	30	Bowler	5	7/8/1987
+102	Darren	Sammy	32	Bowler 	7	27/6/1986
+102	Henry	Gayle	31	Batsman	6	3/3/1987
+101	Brett	Lee	37	Bowler	8	6/7/1983
+\.
+
+
+--
+-- Data for Name: Points; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Points" ("TeamID", "Matches", "Win", "Lost", "Draw", "Points") FROM stdin;
+\.
+
+
+--
+-- Data for Name: Team; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Team" ("TeamID", "TeamName", "Coach", "Captain", "GamesPlayed") FROM stdin;
+102	West Indies	Adam	Chris Gayle	3
+103	South Africa	Korth	Faf du Plessis	6
+101	Australia	Darren	Steve Smith	6
+100	India	Anil Kumble	Virat Kohli	7
+\.
+
+
+--
+-- Name: LogIn_pkey; Type: CONSTRAINT; Schema: public; Owner: shk4869
+--
+
+ALTER TABLE ONLY public."LogIn"
+    ADD CONSTRAINT "LogIn_pkey" PRIMARY KEY ("UserName");
+
+
+--
+-- Name: Play; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Player"
+    ADD CONSTRAINT "Play" PRIMARY KEY ("PlayerId");
+
+
+--
+-- Name: PlayerID; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Batting"
+    ADD CONSTRAINT "PlayerID" PRIMARY KEY ("PlayerID");
+
+
+--
+-- Name: Point; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Points"
+    ADD CONSTRAINT "Point" PRIMARY KEY ("TeamID");
+
+
+--
+-- Name: TeamId; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Team"
+    ADD CONSTRAINT "TeamId" PRIMARY KEY ("TeamID");
+
+
+--
+-- Name: Un; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Player"
+    ADD CONSTRAINT "Un" UNIQUE ("PlayerId");
+
+
+--
+-- Name: Uni_tname; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Team"
+    ADD CONSTRAINT "Uni_tname" UNIQUE ("TeamName");
+
+
+--
+-- Name: match; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Match"
+    ADD CONSTRAINT match PRIMARY KEY ("MatchID");
+
+
+--
+-- Name: pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Bowler"
+    ADD CONSTRAINT pk PRIMARY KEY ("PlayerID");
+
+
+--
+-- Name: trig_matches; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER trig_matches AFTER INSERT ON public."Match" FOR EACH ROW EXECUTE PROCEDURE public.no_of_matches();
+
+
+--
+-- Name: Bat_play; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Batting"
+    ADD CONSTRAINT "Bat_play" FOREIGN KEY ("PlayerID") REFERENCES public."Player"("PlayerId");
+
+
+--
+-- Name: Bowl_play; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Bowler"
+    ADD CONSTRAINT "Bowl_play" FOREIGN KEY ("PlayerID") REFERENCES public."Player"("PlayerId");
+
+
+--
+-- Name: Match-Team; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Match"
+    ADD CONSTRAINT "Match-Team" FOREIGN KEY ("TeamA") REFERENCES public."Team"("TeamName");
+
+
+--
+-- Name: Play_team; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Player"
+    ADD CONSTRAINT "Play_team" FOREIGN KEY ("TeamID") REFERENCES public."Team"("TeamID");
+
+
+--
+-- Name: PointsF; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Points"
+    ADD CONSTRAINT "PointsF" FOREIGN KEY ("TeamID") REFERENCES public."Team"("TeamID");
+
+
+--
+-- Name: match_team; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Match"
+    ADD CONSTRAINT match_team FOREIGN KEY ("TeamB") REFERENCES public."Team"("TeamName");
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
