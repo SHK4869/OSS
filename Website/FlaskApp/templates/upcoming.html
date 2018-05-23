@@ -1,0 +1,56 @@
+{% extends 'header1.html' %}
+
+{% block body %}
+
+	<div class="container1">
+
+         	  <img src="{{ url_for('static', filename='images/completed.jpg' ) }}" alt="" width = "100%">
+
+     </div>
+
+<br>
+	<h1 align="center" >Upcoming Matches</h1>
+	<table class="container2" border="5px" width="80%"  align="center">
+
+		<thead align="center">
+
+		<tr class="tablerow">
+
+			<th align="center">MATCH ID</th>
+
+			<th align="center">TEAM NAME</th>
+
+			<th align="center">TEAM NAME</th>
+
+			<th align="center">DATE</th>
+
+			
+
+		</tr>
+
+		</thead>
+
+		<tbody align="center">
+
+			{% for x in data %}
+
+				<tr align="center">
+
+					<td scope="row">{{x.MatchID}}</td>
+
+					<td>{{x.TeamA}}</td>
+
+					<td>{{x.TeamB}}</td>
+
+					<td>{{x.Date}}</td>
+
+
+				</tr>
+
+			{% endfor %}
+
+		</tbody>
+
+	</table>
+
+{% endblock %}

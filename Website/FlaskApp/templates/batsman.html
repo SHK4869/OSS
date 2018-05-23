@@ -1,12 +1,65 @@
-<HTML>
-<HEAD>
-<TITLE>
-BATSMAN
-</TITLE>
-</HEAD>
-<BODY>
-  <script> var d = {{d|safe}}
-</script>
-{{ d['BestBatFull'] }}
-</BODY>
-</HTML>
+{% extends 'header1.html' %}
+
+{% block body %}
+
+<!--
+<img src="{{ url_for('static', filename='images/cricketr.png' ) }}" alt="" width = "45%" align= "left" style = "margin-left: 30px ; margin-top: 50px""> -->
+
+
+<video class="container1" autoplay="autoplay" muted = "muted" style = "width:80% ; margin-left:100px"  align="center" >
+<source src = "/static/images/batsman.mp4" type="video/mp4" ></video>
+
+<br>
+	
+	<h1 align="left" style = "margin-left: 100px" >Best Batsman</h1>
+	<h3 align="left" style = "margin-left: 100px" > {{ data[0].FirstName + " " + data[0].LastName }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >Strike Rate -> {{ data[0].StrikeRate }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >High Score -> {{ data[0].HighScore }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >Total Runs -> {{ data[0].TotalRuns }} </h3>
+	<table class="container2" border="5px" width="80%"  align="center">
+
+		<thead align="center">
+
+		<tr class="tablerow">
+		
+			<th align="center">NAME</th>
+
+			<th align="center">STRIKE RATE</th>
+
+			<th align="center">MATCHES</th>
+
+			<th align="center">HIGH SCORE</th>
+
+			<th align="center">TOTAL RUNS</th>
+
+		</tr>
+
+		</thead>
+
+		<tbody align="center">
+
+			{% for x in data %}
+
+				<tr align="center">
+
+					<td scope="row">{{x.FirstName + " " + x.LastName}}</td>
+					
+					<td>{{x.StrikeRate}}</td>
+
+					<td>{{x.Matches}}</td>
+
+					<td>{{x.TotalRuns}}</td>
+
+					<td>{{x.HighScore}}</td>
+
+				</tr>
+
+			{% endfor %}
+
+		</tbody>
+
+	</table>
+	
+
+
+{% endblock %}

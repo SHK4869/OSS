@@ -95,7 +95,7 @@
 	
 </head>
 
-<header >
+<header>
 	<!-- <div class="navbar-header">
       
       <a class="navbar-brand" href="/">
@@ -104,6 +104,12 @@
     </div> -->
     
 	<ul class="nav nav-pills" role="tablist">
+	
+	<a href="{{ url_for('homepage') }}"><button type="button" class="btn btn-info" aria-label="Left Align" style="margin-top:20px; margin-bottom: 10px; margin-left: 20px; margin-right: 10px; height:44px">
+	  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>  HOME
+		</button></a>
+
+
 	  <a href="{{ url_for('recent') }}"><button type="button" class="btn btn-success" aria-label="Left Align" style="margin-top:20px; margin-bottom: 10px; margin-left: 20px; margin-right: 10px; height:44px">
 	  <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>  Recent Matches
 		</button></a>
@@ -119,7 +125,7 @@
 		<a href="/bestbowl/"><button type="button" class="btn btn-primary" aria-label="Left Align" style="margin-top:20px; margin-bottom: 10px; margin-left: 10px; margin-right: 20px; height:44px">
 	  <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> Best Bowler
 		</button></a>
-
+		
 
 		<!-- <a href="/login/"><button type="button" class="btn btn-warning" aria-label="Right Align" style="margin-top:20px; margin-bottom: 10px; margin-left: 10px; margin-right: 10px; height:44px">
 	  <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"> Login </span>
@@ -145,7 +151,7 @@
           <form role="form" action="http://127.0.0.1:5000/predict" method="post">
             <div class="form-group">
               <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required="true">
+              <input type="text" class="form-control" id="username" name="username" placeholder="Enter email" required="true">
             </div>
             <div class="form-group">
               <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
@@ -177,6 +183,85 @@ $(document).ready(function(){
 </script>
 </ul>
 
+		<!-- Trigger/Open The Modal -->
+<!-- <button id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<!-- <div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <!-- <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>  -->
+
+	<!-- </ul>
+
+	<ul class="nav navbar-nav navbar-right">
+
+	<div>
+	  <h2>Modal Login Example</h2> -->
+	  <!-- Trigger the modal with a button -->
+	 <!--  <button type="button" class="btn btn-default btn-lg" id="myBtn">Login</button> -->
+
+	  <!-- Modal -->
+	  <!-- <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+ -->
+	      <!-- Modal content-->
+	     <!--  <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 style="color:red;"><span class="glyphicon glyphicon-lock"></span> Login</h4>
+	        </div>
+	        <div class="modal-body">
+	          <form role="form">
+	            <div class="form-group">
+	              <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+	              <input type="text" class="form-control" id="usrname" placeholder="Enter email">
+	            </div>
+	            <div class="form-group">
+	              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+	              <input type="text" class="form-control" id="psw" placeholder="Enter password">
+	            </div>
+	            <div class="checkbox">
+	              <label><input type="checkbox" value="" checked>Remember me</label>
+	            </div>
+	            <button type="submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+	          </form>
+	        </div> -->
+	       <!--  <div class="modal-footer">
+	          <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+	          <p>Not a member? <a href="#">Sign Up</a></p>
+	          <p>Forgot <a href="#">Password?</a></p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>  -->
+	<!-- </div> 
+		<script>
+	$(document).ready(function(){
+	    $("#myBtn").click(function(){
+	        $("#myModal").modal();
+	    });
+	});
+ 		</script> -->
+
+        <!-- <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li> -->
+      </ul>
+
 	
 
 
@@ -185,67 +270,7 @@ $(document).ready(function(){
 
 <body style="background-color:gray">
 
-
-	
-	<div class="container1">
-
-         	  <img src="{{ url_for('static', filename='images/image.jpg' ) }}" alt="" width = "100%">
-
-	  <div class="centered"><h1 class="display-3">Cricket World</h1><p class="lead">Love cricket but don't have time to watch the match? We've got you covered! Check out the team standings, player details, teams and much more!</p></div>
-
-	
-
-	</div>
-
-	<br>
-	<h1 align="center" >LEADERBOARD</h1>
-	<table class="container2" border="5px" width="80%"  align="center">
-
-		<thead align="center">
-
-		<tr class="tablerow">
-
-			<th align="center">TEAM-NAME</th>
-			
-			<th align="center">MATCHES PLAYED</th>
-
-			<th align="center">WINS</th>
-
-			<th align="center">LOSS</th>
-
-			<th align="center">POINTS</th>
-			
-
-		</tr>
-
-		</thead>
-
-		<tbody align="center">
-
-			{% for x in data %}
-
-				<tr align="center">
-
-					<td scope="row">{{x.TeamName}}</td>
-
-					<td>{{x.MatchesPlayed}}</td>
-					
-					<td>{{x.Wins}}</td>
-
-					<td>{{x.Lost}}</td>
-
-					<td>{{x.Points}}</td>
-
-				</tr>
-
-			{% endfor %}
-
-		</tbody>
-
-	</table>
-	<!-- <img style="width:700px; margin-top: 20px;margin-left: 20px; margin-right: 20px; margin-bottom: 30px"src="{{ url_for('static', filename='images/cricket.png' ) }}"> -->
-
-
+	{% block body %}{% endblock %}
 
 </body>
 

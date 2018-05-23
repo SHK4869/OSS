@@ -1,0 +1,63 @@
+{% extends 'header1.html' %}
+
+{% block body %}
+
+<!--
+<img src="{{ url_for('static', filename='images/cricketr.png' ) }}" alt="" width = "45%" align= "left" style = "margin-left: 30px ; margin-top: 50px"">
+-->
+
+<video class="container1" autoplay="autoplay" muted = "muted" style = "width:80% ; margin-left:100px"  align="center" >
+<source src = "/static/images/bowler.mp4" type="video/mp4" ></video>
+
+	<h1 align="left" style = "margin-left: 100px"  >Best Bowler</h1>
+	<h3 align="left" style = "margin-left: 100px" > {{ data[0].FirstName + " " + data[0].LastName }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >Economy -> {{ data[0].Economy }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >Total Wickets -> {{ data[0].Wickets }} </h3>
+	<h3 align="left" style = "margin-left: 100px" >BBI -> {{ data[0].BBI }} </h3>
+	<table class="container2" border="5px" width="60%"  align="center">
+
+		<thead align="center">
+
+		<tr class="tablerow">
+		
+			<th align="center">NAME</th>
+
+			<th align="center"> ECONOMY</th>
+
+			<th align="center">MATCHES</th>
+
+			<th align="center">WICKETS</th>
+
+			<th align="center">BBI</th>
+
+		</tr>
+
+		</thead>
+
+		<tbody align="center">
+
+			{% for x in data %}
+
+				<tr align="center">
+
+					<td scope="row">{{x.FirstName + " " + x.LastName}}</td>
+					
+					<td>{{x.Economy}}</td>
+
+					<td>{{x.Matches}}</td>
+
+					<td>{{x.Wickets}}</td>
+
+					<td>{{x.BBI}}</td>
+
+				</tr>
+
+			{% endfor %}
+
+		</tbody>
+
+	</table>
+
+
+
+{% endblock %}
